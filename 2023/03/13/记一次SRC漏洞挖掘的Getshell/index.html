@@ -1,0 +1,247 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>记一次SRC漏洞挖掘的Getshell | Seven1an's blog</title><meta name="author" content="Seven1an"><meta name="copyright" content="Seven1an"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="注：微信公众号，csdn，freebuf原创以及本博客，都为我本人。 转载请邮件告知！ 免责声明：由于传播、利用本文所发布的而造成的任何直接或者间接的后果及损失，均由使用者本人承担 挖src过程中一次巧妙的getshell直接打穿了某985高校，大概有惊人的五万多人的身份证人脸和个人信息数据….. 听朋友说某证书改版了，最近闲来无事，也刚好想换一个  最后一次交漏洞，这已经是2021年了，有漏洞次">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次SRC漏洞挖掘的Getshell">
+<meta property="og:url" content="https://seven1an.github.io/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/index.html">
+<meta property="og:site_name" content="Seven1an&#39;s blog">
+<meta property="og:description" content="注：微信公众号，csdn，freebuf原创以及本博客，都为我本人。 转载请邮件告知！ 免责声明：由于传播、利用本文所发布的而造成的任何直接或者间接的后果及损失，均由使用者本人承担 挖src过程中一次巧妙的getshell直接打穿了某985高校，大概有惊人的五万多人的身份证人脸和个人信息数据….. 听朋友说某证书改版了，最近闲来无事，也刚好想换一个  最后一次交漏洞，这已经是2021年了，有漏洞次">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://seven1an.github.io/img/th.png">
+<meta property="article:published_time" content="2023-03-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-03-22T01:45:25.912Z">
+<meta property="article:author" content="Seven1an">
+<meta property="article:tag" content="Seven1an">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://seven1an.github.io/img/th.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://seven1an.github.io/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: '/pluginsSrc/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: '/pluginsSrc/flickr-justified-gallery/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '记一次SRC漏洞挖掘的Getshell',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-03-22 09:45:25'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/th.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Seven1an's blog"><span class="site-name">Seven1an's blog</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">记一次SRC漏洞挖掘的Getshell</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2023-03-12T16:00:00.000Z" title="发表于 2023-03-13 00:00:00">2023-03-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a></span></div><div class="meta-secondline"></div></div></div><article class="post-content" id="article-container"><p><strong>注：微信公众号，csdn，freebuf原创以及本博客，都为我本人。</strong> 转载请邮件告知！</p>
+<p><strong>免责声明：由于传播、利用本文所发布的而造成的任何直接或者间接的后果及损失，均由使用者本人承担</strong></p>
+<h2 id="挖src过程中一次巧妙的getshell"><a href="#挖src过程中一次巧妙的getshell" class="headerlink" title="挖src过程中一次巧妙的getshell"></a>挖src过程中一次巧妙的getshell</h2><p>直接打穿了某985高校，大概有惊人的五万多人的身份证人脸和个人信息数据…..</p>
+<p>听朋友说某证书改版了，最近闲来无事，也刚好想换一个</p>
+<p><img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/1.png" alt="9b748ba000a84cf688f02751ae539ca5"></p>
+<p>最后一次交漏洞，这已经是2021年了，有漏洞次数但是rank还不够，直接开干</p>
+<h3 id="START"><a href="#START" class="headerlink" title="START"></a>START</h3><p>​	涉及敏感内容已经高度马赛克，逻辑漏洞+文件上传的绕过</p>
+<h4 id="寻找目标"><a href="#寻找目标" class="headerlink" title="寻找目标"></a>寻找目标</h4><p>​	举例：</p>
+<p>​	<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/2.png" alt="在这里插入图片描述"></p>
+<p>​	这个语法简单粗暴，是我平时用过最多的了</p>
+<p>​	<strong>首先说一下这种语法的优与劣(个人经验，是否正确因人而异)：</strong></p>
+<p>​	<strong>好处</strong></p>
+<ul>
+<li>​	可以发现目标的ip站点，就是比如标题是xxxx管理，ip:22.22.22.22类似这种，因为平常域名防护的话是比较好的(不绝对)，ip就不	如，而且ip直接绕过了云waf，包括c段，扫端口(留意是不是云服务器)，也比域名的方便，况且拿到域名有时候还要找到真实ip不是吗？例如↓</li>
+</ul>
+<p>​	<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/3.png" alt="在这里插入图片描述"></p>
+<p><em>如果你用host domain之类的语法 就是针对于域名的搜索了，不是很容易发现ip的资产</em></p>
+<p>​	<strong>坏处</strong></p>
+<ul>
+<li>​	最重要的就是会 偏离攻击目标 也就是打偏，刚开始的朋友比较容易犯这个错误，大佬装看不到，例如↓<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/4.png" alt="在这里插入图片描述"></li>
+</ul>
+<p>​	比如这种，只是一些引流的广告，把同济当标题的一个噱头，或者说一些报考院校咨询站的标题 之类的，如下↓就是目标外的站点</p>
+<p>​	<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/5.png" alt="在这里插入图片描述"></p>
+<p>​	这样的话用title岂不是浪费了自己的精力和时间，大家在实战中一定要信息观察，避免白忙活。</p>
+<p>​	还有呢就是body的语法，这个筛选难度太复杂，就不说了。</p>
+<p>​	简而言之，打点或者说是搜集资产，<strong>尽量使用多个语法配合逻辑符拼接整合，去搜索和筛选</strong>，这样以确保收集的站点更全更多。</p>
+<p>​	</p>
+<h4 id="锁定目标"><a href="#锁定目标" class="headerlink" title="锁定目标"></a>锁定目标</h4><p>​	<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/6.png" alt="在这里插入图片描述"></p>
+<p>​	爽，一眼有</p>
+<p>​	看到这种目标，首先分析一下指纹</p>
+<p>​	<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/7.png" alt="在这里插入图片描述"></p>
+<p>​	vue前端框架，看到这种框架，就看一下源码，一般前端信息特别特别多的</p>
+<p>​	然后就去测试未授权，看js，抓包看接口之类的漏洞，至少我遇到的vue百分之七八十或多或少都有不同程度的逻辑漏洞和未授权，涉及到了一个路由守卫的东西<br>​	因为已经验证有漏洞， 多余的就不赘述。</p>
+<h4 id="漏洞细节"><a href="#漏洞细节" class="headerlink" title="漏洞细节"></a>漏洞细节</h4><h5 id="逻辑漏洞"><a href="#逻辑漏洞" class="headerlink" title="逻辑漏洞"></a>逻辑漏洞</h5><p>​	<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/8.png" alt="在这里插入图片描述"></p>
+<p>​	留意一下token是空</p>
+<p><img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/9.png" alt="9"></p>
+<p>​	返回包1改成0。</p>
+<p>​	<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/10.png" alt="在这里插入图片描述"></p>
+<p>​	进去一瞬间，然后直接弹出来，拦截不放包的话也是不能点那些功能的，不拦截就闪退。</p>
+<p>​	当时对js看了很久，但是没有截图就不细说了。</p>
+<p>​	重新抓包测试</p>
+<p>​	<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/11.png" alt="在这里插入图片描述"></p>
+<p>​	这次发现 token默认有了一个值 undefined 也就是未赋值的声明。</p>
+<p>​	然后重复改包1变成0，居然发现不闪退了。</p>
+<p>​	<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/12.png" alt="在这里插入图片描述"></p>
+<h5 id><a href="#" class="headerlink" title></a></h5><p>​	猜测是token起码是要有一个值的，<strong>undefined也是一个值，这里应该是设计有逻辑缺陷，按理说未赋值undefined不应该作为一个值，这里token不能是空的，黑盒测试嘛，就是大胆猜一猜，</strong>我的推测是这样的，空就主页面闪退，有值的话主页不闪退，功能点触发再去鉴定这个token是否正确。</p>
+<p>​	f12给它一个值</p>
+<p>​	<strong>至于为什么随便赋一个值，而不去使用undefined呢，我就是担心万一后端有”!&#x3D;”这种 对undefined的检测</strong></p>
+<p><img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/13.png" alt="在这里插入图片描述"></p>
+<p>​	然后改包进入，居然可以随便点点点了，不再去闪退到登录。</p>
+<p>​	点击这个查看活动</p>
+<p>​	<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/14.png" alt="在这里插入图片描述"></p>
+<p>​	</p>
+<p>​	抓包，看到我添加的token&#x3D;yydz了</p>
+<p>​	<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/15.png" alt="在这里插入图片描述"></p>
+<p>​	看一下返回包，触发闪退，这里和前面的猜测差不多，触发功能点时再去验证token的正确与否</p>
+<p>​	<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/16.png" alt="在这里插入图片描述"></p>
+<p>​	显然错误的token会提示未登录，返回值是1就直接闪退到登录界面，所以改0 留下来</p>
+<p>​	<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/17.png" alt="在这里插入图片描述"></p>
+<h5 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h5><p>​	上传一个html</p>
+<p>​	<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/18.png" alt="在这里插入图片描述"></p>
+<p>​	成功了</p>
+<p>​	访问返回的路径就可以了</p>
+<p>​	<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/19.png" alt="在这里插入图片描述"></p>
+<p>​	接着上传一个phpinfo()试试，为什么是php，因为前面的指纹信息已经告诉了 ，以及返回包的apache信息</p>
+<p>​	<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/20.png" alt="在这里插入图片描述"></p>
+<p>​	看一眼禁用函数</p>
+<p>​	<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/21.png" alt="在这里插入图片描述"></p>
+<p>​	头晕这种，这个时候哥斯拉就用上了</p>
+<p>​	<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/22.png" alt="在这里插入图片描述"></p>
+<p>​	<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/23.png" alt="在这里插入图片描述"></p>
+<p>​	连接	</p>
+<p>​	<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/24.png" alt="在这里插入图片描述"></p>
+<p>​	直接getshell，有着很多的信息，貌似规模非常的大，这里就不继续横向了，点到为止</p>
+<p>​	然后换证书的时候…这下白忙活了，怪我当时没细心看兑换限制，只能换个别的咯</p>
+<p>​	<img src="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/img/25.png" alt="在这里插入图片描述"></p>
+<h3 id="总结一下"><a href="#总结一下" class="headerlink" title="总结一下"></a>总结一下</h3><ul>
+<li>首先就是运气成分</li>
+<li>还有就是多试一试，不要去感觉这没有那没有，试了就有成功的可能，别嫌麻烦</li>
+<li>然后利用Vue这种框架的一些特性，前端决定的信息太多，结合js多多分析。</li>
+<li>最后就是多多实战，积累经验</li>
+</ul>
+<h2 id="end"><a href="#end" class="headerlink" title="end"></a><em><strong>end</strong></em></h2></article><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/img/th.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="/pluginsSrc/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/03/11/java%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" title="Java命令执行"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Java命令执行</div></div></a></div><div class="next-post pull-right"><a href="/2023/03/07/%E5%8F%88%E4%B8%80%E4%B8%AA%E5%9C%A8%E9%87%8E0day/" title="又一个在野0day"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">又一个在野0day</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/th.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Seven1an</div><div class="author-info__description">一名热爱渗透测试技术的美股交易员</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:q1al4@qq.com" target="_blank" title="联系我"><i class="fas fa-envelope" style="color: ;"></i></a><a class="social-icon" href="https://map.baidu.com/poi/%E6%B2%99%E7%94%B0%E8%AD%A6%E7%BD%B2/@12713249.729386505,2542027.87502045,17.95z?uid=a98e9f0c58ee9582611c677b&amp;ugc_type=3&amp;ugc_ver=1&amp;device_ratio=2&amp;compat=1&amp;pcevaname=pc4.1&amp;querytype=detailConInfo&amp;da_src=shareurl" target="_blank" title="找到我"><i class="fas fa-map-marker"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">文章如出现错误或有疑问的地方，欢迎联系指出，在下感激不尽，也欢迎技术交流与合作的朋友。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%96src%E8%BF%87%E7%A8%8B%E4%B8%AD%E4%B8%80%E6%AC%A1%E5%B7%A7%E5%A6%99%E7%9A%84getshell"><span class="toc-number">1.</span> <span class="toc-text">挖src过程中一次巧妙的getshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#START"><span class="toc-number">1.1.</span> <span class="toc-text">START</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%BB%E6%89%BE%E7%9B%AE%E6%A0%87"><span class="toc-number">1.1.1.</span> <span class="toc-text">寻找目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%94%81%E5%AE%9A%E7%9B%AE%E6%A0%87"><span class="toc-number">1.1.2.</span> <span class="toc-text">锁定目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%BB%86%E8%8A%82"><span class="toc-number">1.1.3.</span> <span class="toc-text">漏洞细节</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">逻辑漏洞</span></a></li><li class="toc-item toc-level-5"><a class="toc-link"><span class="toc-number">1.1.3.2.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0"><span class="toc-number">1.1.3.3.</span> <span class="toc-text">文件上传</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B"><span class="toc-number">1.2.</span> <span class="toc-text">总结一下</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#end"><span class="toc-number">2.</span> <span class="toc-text">end</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/03/17/Springboot%E4%B9%8BActuator-heapdump%E6%BC%8F%E6%B4%9E/" title="Springboot之Actuator-heapdump漏洞">Springboot之Actuator-heapdump漏洞</a><time datetime="2024-03-16T16:00:00.000Z" title="发表于 2024-03-17 00:00:00">2024-03-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/03/11/java%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" title="Java命令执行">Java命令执行</a><time datetime="2024-03-10T16:00:00.000Z" title="发表于 2024-03-11 00:00:00">2024-03-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/03/13/%E8%AE%B0%E4%B8%80%E6%AC%A1SRC%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E7%9A%84Getshell/" title="记一次SRC漏洞挖掘的Getshell">记一次SRC漏洞挖掘的Getshell</a><time datetime="2023-03-12T16:00:00.000Z" title="发表于 2023-03-13 00:00:00">2023-03-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/03/07/%E5%8F%88%E4%B8%80%E4%B8%AA%E5%9C%A8%E9%87%8E0day/" title="又一个在野0day">又一个在野0day</a><time datetime="2023-03-06T16:00:00.000Z" title="发表于 2023-03-07 00:00:00">2023-03-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/01/15/%E4%B8%80%E4%BA%9Bsrc%E5%AE%9E%E6%88%98%E8%AE%B0%E5%BD%95/" title="一些src实战记录">一些src实战记录</a><time datetime="2023-01-14T16:00:00.000Z" title="发表于 2023-01-15 00:00:00">2023-01-15</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Seven1an</div><div class="framework-info"><span>❤ I love $BTC ❤</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="/pluginsSrc/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="true" data-click="false"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="/pluginsSrc/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
