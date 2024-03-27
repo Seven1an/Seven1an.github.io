@@ -211,6 +211,25 @@
     </entry>
     
     
+    
+    <entry>
+      <title>上课用msf+cs给老师电脑打穿了</title>
+      <link href="/2021/05/10/%E4%B8%8A%E8%AF%BE%E7%94%A8msf-cs%E7%BB%99%E8%80%81%E5%B8%88%E7%94%B5%E8%84%91%E6%89%93%E7%A9%BF%E4%BA%86/"/>
+      <url>/2021/05/10/%E4%B8%8A%E8%AF%BE%E7%94%A8msf-cs%E7%BB%99%E8%80%81%E5%B8%88%E7%94%B5%E8%84%91%E6%89%93%E7%A9%BF%E4%BA%86/</url>
+      
+        <content type="html"><![CDATA[<p>上课用msf+cs给老师电脑打穿了</p><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>说起来这样，上课感觉讲的太无聊，就下了个虚拟机，装好了kali，java环境以及cobaltstrike</p><p>机房什么杀软也没有… 都是windows7的系统，ms17010乱杀，然后把会话传递寄给cobaltstrike，于是乎。。</p><p>突然想小学生心理想恶搞，就出现了下面这一幕</p><p>#<video width="100%" height="100%" src="http://sb00sztxd.hn-bkt.clouddn.com/1.mp4" type="video/mp4" controls loop></video></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 渗透测试 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
   
   
 </search>
