@@ -1,0 +1,280 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>WIZ K8S LAN Party Writeup | Seven1an's blog</title><meta name="author" content="Seven1an"><meta name="copyright" content="Seven1an"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="WIZ K8S LAN Party Writeup前言​	Kubernetes CTF靶场，记录一下解题过程 ​	Link:	https:&#x2F;&#x2F;www.k8slanparty.com&#x2F; ​	“Welcome to the Kubernetes LAN Party! A CTF designed to challenge your Kubernetes hacking skills through a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WIZ K8S LAN Party Writeup">
+<meta property="og:url" content="https://seven1an.github.io/2025/01/07/WIZ-K8S-LAN-Party-Writeup/index.html">
+<meta property="og:site_name" content="Seven1an&#39;s blog">
+<meta property="og:description" content="WIZ K8S LAN Party Writeup前言​	Kubernetes CTF靶场，记录一下解题过程 ​	Link:	https:&#x2F;&#x2F;www.k8slanparty.com&#x2F; ​	“Welcome to the Kubernetes LAN Party! A CTF designed to challenge your Kubernetes hacking skills through a">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://seven1an.github.io/img/th.png">
+<meta property="article:published_time" content="2025-01-07T02:18:56.000Z">
+<meta property="article:modified_time" content="2025-01-07T12:06:22.979Z">
+<meta property="article:author" content="Seven1an">
+<meta property="article:tag" content="Seven1an">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://seven1an.github.io/img/th.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://seven1an.github.io/2025/01/07/WIZ-K8S-LAN-Party-Writeup/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: '/pluginsSrc/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: '/pluginsSrc/flickr-justified-gallery/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'WIZ K8S LAN Party Writeup',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-01-07 20:06:22'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/th.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Seven1an's blog"><span class="site-name">Seven1an's blog</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">WIZ K8S LAN Party Writeup</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2025-01-07T02:18:56.000Z" title="发表于 2025-01-07 10:18:56">2025-01-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BA%91%E5%AE%89%E5%85%A8/">云安全</a></span></div><div class="meta-secondline"></div></div></div><article class="post-content" id="article-container"><h2 id="WIZ-K8S-LAN-Party-Writeup"><a href="#WIZ-K8S-LAN-Party-Writeup" class="headerlink" title="WIZ K8S LAN Party Writeup"></a>WIZ K8S LAN Party Writeup</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>​	Kubernetes CTF靶场，记录一下解题过程</p>
+<p>​	<strong>Link:</strong>	<a target="_blank" rel="noopener" href="https://www.k8slanparty.com/">https://www.k8slanparty.com/</a></p>
+<p>​	“Welcome to the Kubernetes LAN Party! A CTF designed to challenge your Kubernetes hacking skills through a series of critical network vulnerabilities and misconfigurations. Challenge yourself, boost your skills, and stay ahead in the cloud security game.”</p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/1.png" alt="image-20250107103022303"></p>
+<h3 id="START"><a href="#START" class="headerlink" title="START"></a>START</h3><h4 id="1-RECON"><a href="#1-RECON" class="headerlink" title="1.RECON"></a>1.RECON</h4><p>Description</p>
+<p><em>You have shell access to compromised a Kubernetes pod at the bottom of this page, and your next objective is to compromise other internal services further.</em></p>
+<p><em>As a warmup, utilize <a target="_blank" rel="noopener" href="https://thegreycorner.com/2023/12/13/kubernetes-internal-service-discovery.html#kubernetes-dns-to-the-partial-rescue">DNS scanning</a> to uncover hidden internal services and obtain the flag. We have “loaded your machine with <a target="_blank" rel="noopener" href="https://gist.github.com/nirohfeld/c596898673ead369cb8992d97a1c764e">dnscan</a> to ease this process for further challenges.</em></p>
+<p><em>All the flags in the challenge follow the same format: wiz_k8s_lan_party{</em>}</p>
+<p>提供了两个链接</p>
+<p>以及，”loaded your machine with [dnscan]”</p>
+<p>点进去第一个链接开头就表达了</p>
+<p><img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/2.png" alt="image-20250107105141612"></p>
+<p>再结合当前<code>Pod</code>自带了<code>dnscan</code>，也就是说让扫网段探测发现其他<code>Pod</code></p>
+<p>通过<code>env</code>确认apiserver的地址</p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/3.png" alt="image-20250107110258324"></p>
+<p>而apiserver大部分都在B段</p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/4.png" alt="image-20250107110511034"></p>
+<p>请求下即可获得flag</p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/5.png" alt="image-20250107110618924"></p>
+<h4 id="2-FINDING-NEIGHBOURS"><a href="#2-FINDING-NEIGHBOURS" class="headerlink" title="2.FINDING NEIGHBOURS"></a>2.FINDING NEIGHBOURS</h4><p>Description</p>
+<p><em>Sometimes, it seems we are the only ones around, but we should always be on guard against invisible <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/">sidecars</a> reporting sensitive secrets.</em></p>
+<p>题目描述给出了Sidecar的介绍</p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/6.png" alt="image-20250107112612725"></p>
+<p>​	也就是说如果是Sidecar模式，<code>Pod</code>中会运行一个容器外加另一个容器(或更多)，它们共同运行在同一个<code> Pod</code> 中，<strong>共享网络和存储资源</strong>，以完成协同工作。</p>
+<p>​	看一下网络连接，可以发现本地的192.168.1.51 一直向 10.100.171.123:80 通信</p>
+<p><img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/7.png" alt="image-20250107134709419"></p>
+<p>​	<code>tcpdump</code>抓包</p>
+<p><img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/8.png" alt="image-20250107134910627"></p>
+<p>  请求包中发现flag</p>
+<p>​	<img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/9.png" alt="image-20250107134950224"></p>
+<h4 id="3-DATA-LEAKAGE"><a href="#3-DATA-LEAKAGE" class="headerlink" title="3.DATA LEAKAGE"></a>3.DATA LEAKAGE</h4><p>Description</p>
+<p><em>The targeted big corp utilizes outdated, yet cloud-supported technology for data storage in production. But oh my, this technology was introduced in an era when access control was only network-based.</em></p>
+<p>意思是网络共享存储</p>
+<p>看一下挂载文件情况</p>
+<p><img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/10.png" alt="image-20250107142434212"></p>
+<p>这里留意到有一个<code>fs-0779524599b7d5e7e.efs.us-west-1.amazonaws.com</code>和<code>/efs</code>路径</p>
+<p>cd过去没有权限打开</p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/11.png" alt="image-20250107142548682"></p>
+<p>GPT分析了这个域名</p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/12.png" alt="image-20250107142630818"></p>
+<p> 查看一下挂载点和挂载详情</p>
+<p><img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/13.png" alt="image-20250107142822999"></p>
+<p>这里有这么一行</p>
+<p><img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/14.png" alt="image-20250107142943389"></p>
+<p>就是说路径 <code>/efs</code>采用了 NFS v4 协议</p>
+<p>根据Hint#1，得知了一个NFS开源的客户端库，以及命令示例</p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/15.png" alt="image-20250107144020016"></p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/16.png" alt="image-20250107144141231"></p>
+<p> <code>nfs-cat</code> 和 <code>nfs-ls</code> 是 NFS的一些常见工具，用于从 NFS 服务器上读取文件内容和列出目录内容</p>
+<p><img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/17.png" alt="image-20250107144610917"></p>
+<p>提示没有权限</p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/18.png" alt="image-20250107144628363"></p>
+<p>根据Hint#2得知还需要提供<code>gid</code>和<code>uid</code></p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/19.png" alt="image-20250107144844701"></p>
+<p>最终成功获取</p>
+<p><img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/20.png" alt="image-20250107145038274"></p>
+<h4 id="4-BYPASSING-BOUNDARIES"><a href="#4-BYPASSING-BOUNDARIES" class="headerlink" title="4.BYPASSING BOUNDARIES"></a>4.BYPASSING BOUNDARIES</h4><p> Description</p>
+<p> <em>Apparently, new service mesh technologies hold unique appeal for ultra-elite users (root users). Don’t abuse this power; use it   responsibly and with caution.</em></p>
+<p>Policy</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">security.istio.io/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">AuthorizationPolicy</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">istio-get-flag</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">k8s-lan-party</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">action:</span> <span class="string">DENY</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">&quot;&#123;flag-pod-name&#125;&quot;</span></span><br><span class="line">  <span class="attr">rules:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">from:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">source:</span></span><br><span class="line">        <span class="attr">namespaces:</span> [<span class="string">&quot;k8s-lan-party&quot;</span>]</span><br><span class="line">    <span class="attr">to:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">operation:</span></span><br><span class="line">        <span class="attr">methods:</span> [<span class="string">&quot;POST&quot;</span>, <span class="string">&quot;GET&quot;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>简单看下，Policy描述了Istio 的安全策略，<code>AuthorizationPolicy</code>表示授权策略资源，控制了对<code>flag-pod-name</code>的访问权限，在<code>k8s-lan-party</code> 命名空间下，如果是GET或POST请求则拒绝</p>
+<p>先走一遍<code>dnscan</code></p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/21.png" alt="image-20250107150624693"></p>
+<p>因为Policy策略，请求被拒绝</p>
+<p><img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/22.png" alt="image-20250107150659322"></p>
+<p>到处搜一下</p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/23.png" alt="image-20250107151441740"></p>
+<p> 最终找到了很详细的一篇文章 <a target="_blank" rel="noopener" href="https://pulsesecurity.co.nz/advisories/istio-egress-bypass">Istio outboundTrafficPolicy Egress Control Bypass</a></p>
+<p> 这里有这么一句</p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/24.png" alt="image-20250107151551087"></p>
+<p><strong>“An attacker who has root user access in a pod can use to switch to a UID which matches the iptables rules highlighted above and bypasses the restriction”</strong></p>
+<p>​	那就看一下当前的权限</p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/25.png" alt="image-20250107151648347"></p>
+<p>​	打开passwd确认其中也有一个uid为1337的账号</p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/26.png" alt="image-20250107151807356"></p>
+<p>使用这个1337的账号请求</p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/27.png" alt="image-20250107152109342"></p>
+<p>成功获取flag</p>
+<h4 id="5-LATERAL-MOVEMET"><a href="#5-LATERAL-MOVEMET" class="headerlink" title="5.LATERAL MOVEMET"></a>5.LATERAL MOVEMET</h4><p>Description</p>
+<p><em>Where pods are being mutated by a foreign regime, one could abuse its bureaucracy and leak sensitive information from the <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#request">administrative</a> services.</em></p>
+<p>Policy</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">kyverno.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Policy</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">apply-flag-to-env</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">sensitive-ns</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">rules:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">inject-env-vars</span></span><br><span class="line">      <span class="attr">match:</span></span><br><span class="line">        <span class="attr">resources:</span></span><br><span class="line">          <span class="attr">kinds:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">Pod</span></span><br><span class="line">      <span class="attr">mutate:</span></span><br><span class="line">        <span class="attr">patchStrategicMerge:</span></span><br><span class="line">          <span class="attr">spec:</span></span><br><span class="line">            <span class="attr">containers:</span></span><br><span class="line">              <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">&quot;*&quot;</span></span><br><span class="line">                <span class="attr">env:</span></span><br><span class="line">                  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">FLAG</span></span><br><span class="line">                    <span class="attr">value:</span> <span class="string">&quot;&#123;flag&#125;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Kyverno</code> 策略的主要功能是在 <code>sensitive-ns</code> 命名空间中，自动为所有的 <code>Pod</code> 容器注入一个名为 <code>FLAG</code> 的环境变量，值为 <code>&#123;flag&#125;</code></p>
+<p>如果想要获得<code>flag</code>，就需要创建一个<code>pod</code>，并且该 <code>Pod</code> 必须在 <code>sensitive-ns</code> 命名空间中</p>
+<p>简单看下信息，再跑一下<code>dnscan</code></p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/28.png" alt="image-20250107154212794"></p>
+<p>得到了如下域名</p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/29.png" alt="image-20250107154319779"></p>
+<p>这里让GPT推测总结一下每个域名的作用</p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/30.png" alt="image-20250107174445672"></p>
+<p>​	<code>kyverno-svc.kyverno.svc.cluster.local</code>则是服务入口点，结合一下源码 <a target="_blank" rel="noopener" href="https://github.com/kyverno/kyverno/blob/main/pkg/config/config.go">kyverno&#x2F;pkg&#x2F;config&#x2F;config.go at main · kyverno&#x2F;kyverno</a></p>
+<p>​	可以确定的是路径为<code>/mutate</code></p>
+<p>​	<img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/31.png" alt="image-20250107174842355"></p>
+<p>​	</p>
+<p>在Description中，还给出了一个链接 <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#request">Dynamic Admission Control | Kubernetes</a></p>
+<p><img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/32.png" alt="image-20250107175145924"></p>
+<p>描述了<code>AdmissionReview</code> 请求，<code>Kyverno</code> 使用 <code>AdmissionReview</code> 请求来获取每个 API 请求的详细信息并做出相应的操作</p>
+<p>现在的问题来到：如何构造一个<code>AdmissionReview</code> 请求？Hint#1中给出了提示 <a target="_blank" rel="noopener" href="https://github.com/anderseknert/kube-review">anderseknert&#x2F;kube-review: Create Kubernetes AdmissionReview requests from Kubernetes resource manifests</a></p>
+<p>依靠这个工具，把原始的 Kubernetes 资源描述文件，转化为 <code>AdmissionReview</code> 请求</p>
+<p>综合上面，得出结论：当前<code>Pod</code>没有权限创建<code>Pod</code>，如果想要获得flag，那么就需要依靠<code>kyverno</code>，通过<code>kube-review</code>构造<code>AdmissionReview</code>请求操作 <code>kyverno</code>来创建<code>Pod</code></p>
+<p>写一个简单的yaml创建<code>Pod</code>，在这里留意命名空间要与Policy命名空间一致</p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/33.png" alt="image-20250107193740484"></p>
+<p>运行<code>kube-review</code></p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/34.png" alt="image-20250107194904768"></p>
+<p>得到这些之后，根据官方文档调好请求发送即可</p>
+<p> <img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/35.png" alt="image-20250107195334387"></p>
+<p>​	失败了，提示SSL问题</p>
+<p><img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/36.png" alt="image-20250107195726342"></p>
+<p>​	-k 跳过证书验证即可</p>
+<p><img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/37.png" alt="image-20250107195839868"></p>
+<p>​	把这一串base64解码即可得到flag</p>
+<p><img src="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/img/38.png" alt="image-20250107195937783"></p>
+<p>结束，一点感悟：在学习技术的时候，听别人讲、跟着一起做和讲给别人听，这三种学习方法对学习效果的深度逐级递增。</p>
+<h3 id="END"><a href="#END" class="headerlink" title="END"></a>END</h3></article><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/img/th.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="/pluginsSrc/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/10/11/%E5%85%AC%E5%BC%8F%E5%8C%96Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-SpringBoot/" title="公式化Java代码审计-SpringBoot"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">公式化Java代码审计-SpringBoot</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/th.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Seven1an</div><div class="author-info__description">HIMURA KENSHIN</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Seven1an/"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">文章如出现错误或有疑问的地方，欢迎联系指出，在下感激不尽，也欢迎技术交流与合作的朋友。 <img src="/img/wechat.jpg" alt="微信二维码" style="width: 260px; height: auto;"></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#WIZ-K8S-LAN-Party-Writeup"><span class="toc-number">1.</span> <span class="toc-text">WIZ K8S LAN Party Writeup</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#START"><span class="toc-number">1.2.</span> <span class="toc-text">START</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-RECON"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.RECON</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-FINDING-NEIGHBOURS"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.FINDING NEIGHBOURS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-DATA-LEAKAGE"><span class="toc-number">1.2.3.</span> <span class="toc-text">3.DATA LEAKAGE</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-BYPASSING-BOUNDARIES"><span class="toc-number">1.2.4.</span> <span class="toc-text">4.BYPASSING BOUNDARIES</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-LATERAL-MOVEMET"><span class="toc-number">1.2.5.</span> <span class="toc-text">5.LATERAL MOVEMET</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#END"><span class="toc-number">1.3.</span> <span class="toc-text">END</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/" title="WIZ K8S LAN Party Writeup">WIZ K8S LAN Party Writeup</a><time datetime="2025-01-07T02:18:56.000Z" title="发表于 2025-01-07 10:18:56">2025-01-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/%E5%85%AC%E5%BC%8F%E5%8C%96Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-SpringBoot/" title="公式化Java代码审计-SpringBoot">公式化Java代码审计-SpringBoot</a><time datetime="2024-10-11T03:07:31.000Z" title="发表于 2024-10-11 11:07:31">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/08/23/CobaltStrike-%E4%B8%80%E7%A7%8D%E7%89%B9%E6%AE%8A%E7%9A%84%E4%B8%8D%E5%87%BA%E7%BD%91%E4%B8%8A%E7%BA%BF%E6%96%B9%E5%BC%8F/" title="CobaltStrike-一种特殊的不出网上线方式">CobaltStrike-一种特殊的不出网上线方式</a><time datetime="2024-08-23T02:30:58.000Z" title="发表于 2024-08-23 10:30:58">2024-08-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/07/29/Springboot%E5%9C%BA%E6%99%AF%E4%B8%8B%E4%B8%8D%E5%87%BA%E7%BD%91-%E5%86%85%E5%AD%98%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86/" title="SpringBoot场景下不出网-内存中的正向代理">SpringBoot场景下不出网-内存中的正向代理</a><time datetime="2024-07-29T11:32:21.000Z" title="发表于 2024-07-29 19:32:21">2024-07-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/05/26/Servlet%E5%86%85%E5%AD%98%E9%A9%AC%E7%9A%84%E5%88%A9%E7%94%A8%E4%B8%8E%E6%8E%92%E6%9F%A5/" title="Servlet内存马的利用与排查">Servlet内存马的利用与排查</a><time datetime="2024-05-26T08:19:31.000Z" title="发表于 2024-05-26 16:19:31">2024-05-26</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Seven1an</div><div class="framework-info"><span>❤ I love $BTC ❤</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="/pluginsSrc/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="true" data-click="false"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="/pluginsSrc/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><link rel="stylesheet" href="/pluginsSrc/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/aplayer/dist/APlayer.min.js"></script><script src="/pluginsSrc/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
