@@ -1,0 +1,224 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>基于Chrome扩展插件的后门技术实现 | Seven1an's blog</title><meta name="author" content="Seven1an"><meta name="copyright" content="Seven1an"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="基于Chrome扩展插件的后门技术实现免责声明：由于传播、利用本文所发布的而造成的任何直接或者间接的后果及损失，均由使用者本人承担 前言​		起因是最近对钓鱼比较感兴趣，恰好又关注到了将军手下黑客盗ETH这件事，一股邪念涌出但是我压制回去了。想到自己也搞一个钓鱼，留着打攻防的时候看看能不能用上，思来想去夜不能寐想到了一个场景： ​		通过钓鱼，或者漏洞利用，拿下了一台员工的机器，根据Chrome当">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于Chrome扩展插件的后门技术实现">
+<meta property="og:url" content="https://seven1an.github.io/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:site_name" content="Seven1an&#39;s blog">
+<meta property="og:description" content="基于Chrome扩展插件的后门技术实现免责声明：由于传播、利用本文所发布的而造成的任何直接或者间接的后果及损失，均由使用者本人承担 前言​		起因是最近对钓鱼比较感兴趣，恰好又关注到了将军手下黑客盗ETH这件事，一股邪念涌出但是我压制回去了。想到自己也搞一个钓鱼，留着打攻防的时候看看能不能用上，思来想去夜不能寐想到了一个场景： ​		通过钓鱼，或者漏洞利用，拿下了一台员工的机器，根据Chrome当">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://seven1an.github.io/img/th.png">
+<meta property="article:published_time" content="2025-02-26T02:29:36.000Z">
+<meta property="article:modified_time" content="2025-02-26T03:58:54.861Z">
+<meta property="article:author" content="Seven1an">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://seven1an.github.io/img/th.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://seven1an.github.io/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: '/pluginsSrc/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: '/pluginsSrc/flickr-justified-gallery/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '基于Chrome扩展插件的后门技术实现',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-02-26 11:58:54'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/th.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">19</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Seven1an's blog"><span class="site-name">Seven1an's blog</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">基于Chrome扩展插件的后门技术实现</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2025-02-26T02:29:36.000Z" title="发表于 2025-02-26 10:29:36">2025-02-26</time></span></div><div class="meta-secondline"></div></div></div><article class="post-content" id="article-container"><h2 id="基于Chrome扩展插件的后门技术实现"><a href="#基于Chrome扩展插件的后门技术实现" class="headerlink" title="基于Chrome扩展插件的后门技术实现"></a>基于Chrome扩展插件的后门技术实现</h2><p><strong>免责声明：由于传播、利用本文所发布的而造成的任何直接或者间接的后果及损失，均由使用者本人承担</strong></p>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>​		起因是最近对钓鱼比较感兴趣，恰好又关注到了将军手下黑客盗ETH这件事，一股邪念涌出但是我压制回去了。想到自己也搞一个钓鱼，留着打攻防的时候看看能不能用上，思来想去夜不能寐想到了一个场景：</p>
+<p>​		通过钓鱼，或者漏洞利用，拿下了一台员工的机器，根据Chrome当前的市场占比以及实际情况，如果有WEB业务需要使用，几乎百分之99的人都会有。比如说OA，VPN，堡垒机，各种安全设备的面板等等等，它百分之99用的是Chrome浏览器。这样我搞一个恶意的插件加载进去，<strong>实现键盘记录或者搜集一些信息搞点钓鱼什么的</strong>，之后它就诞生了，我给他取名为：fkc(FuckChrome)</p>
+<p>​		Github:	<a target="_blank" rel="noopener" href="https://github.com/Seven1an/fkc">https://github.com/Seven1an/fkc</a></p>
+<h4 id="START"><a href="#START" class="headerlink" title="START"></a>START</h4><p>​		原理：</p>
+<p>​		1.通过终端启动chrome并加载恶意插件</p>
+<p>​		2.插件将用户的请求以及按键情况，发送到监听服务</p>
+<p>​		3.监听的服务再将发来的内容写入到文件中保存</p>
+<h5 id="演示"><a href="#演示" class="headerlink" title="演示"></a>演示</h5><p>​	使用cs进行演示来更贴近实际情况		</p>
+<p>​	这里我已经写好了chrome插件</p>
+<p> <img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/1.png" alt="image-20250226105256633"></p>
+<p>​	监听服务我使用go来实现的，刚开始用的php，后面考虑到实际实践情况可能会很麻烦，感觉一劳永逸得了</p>
+<p> <img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/2.png" alt="image-20250226105813347"></p>
+<p>不管是插件还是监听端，代码量都不是很多，因为我目前实现的功能很少，仅有<strong>键盘记录</strong>+<strong>请求获取</strong>这两个功能，我想测试几个实际场景后再考虑是否继续深入研究，所以欢迎一起交流的师傅！</p>
+<h6 id="一、加载插件"><a href="#一、加载插件" class="headerlink" title="一、加载插件"></a>一、加载插件</h6><p>​		这里我已经将其上线到cs	<img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/3.png" alt="image-20250226110257177"></p>
+<p>​	众所周知Chrome安装的时候是不能自定义安装路径的，这也方便了我们攻击者确定他在哪</p>
+<p>​	<img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/4.png" alt="image-20250226110502848"></p>
+<p>​	确认到Chrome的绝对路径</p>
+<p><img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/5.png" alt="image-20250226110640234"></p>
+<p>​	通过Google的技术支持回复得知，可以通过<code>--load-extension=&lt;path-to-extension-folder&gt;</code>来加载插件启动Chrome</p>
+<p> link：<a target="_blank" rel="noopener" href="https://support.google.com/chrome/thread/205881926/it-s-possible-to-load-unpacked-extension-automatically-in-chrome?hl=en">https://support.google.com/chrome/thread/205881926/it-s-possible-to-load-unpacked-extension-automatically-in-chrome?hl=en</a></p>
+<p><img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/6.png" alt="image-20250226111021911"></p>
+<p>​	再加载启动之前，查看浏览器确实没有任何插件</p>
+<p>​	<img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/7.png" alt="image-20250226111143916"></p>
+<p>先把插件传上去</p>
+<p> <img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/8.png" alt="image-20250226111428160"></p>
+<p>加载启动</p>
+<p><img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/9.png" alt="image-20250226111922128"></p>
+<p>这个时候打开受害机，已经请后门插件进行了添加</p>
+<p> <img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/10.png" alt="image-20250226112021339"></p>
+<p>当然为了伪装，可以把他改一下名字 换个头像之类的，比如说 什么什么广告拦截助手，网页清理大师之类的</p>
+<h6 id="二、启动监听"><a href="#二、启动监听" class="headerlink" title="二、启动监听"></a>二、启动监听</h6><p>​	把编译好的exe放上去</p>
+<p>​	<img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/11.png" alt="image-20250226112303222"></p>
+<p> <strong>-p 指定监听端口，这个端口要和插件中的通信保持一致</strong>，如果放在外网ip也要改，这个就不演示了，因为我也没做测试</p>
+<p><img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/12.png" alt="image-20250226112654519"></p>
+<p><img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/13.png" alt="image-20250226112732741"></p>
+<p><img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/14.png" alt="image-20250226112759628"></p>
+<p>为了更是实用，程序运行没有遗留窗口，完全静默在后台</p>
+<p><img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/15.png" alt="image-20250226113102619"></p>
+<h6 id="三、结果呈现"><a href="#三、结果呈现" class="headerlink" title="三、结果呈现"></a>三、结果呈现</h6><p>​	这个时候，<strong>假装我是受害者</strong>，我现在需要登录堡垒机看一下日志</p>
+<p>​	<img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/16.png" alt="image-20250226113307850"></p>
+<p> 然后我现在是攻击者，在cs中找到临时目录，也就是<code>C:\Users\&lt;当前用户名&gt;\AppData\Local</code>，可以看到多了两个文件，<code>key_press.txt</code>和<code>request_log.txt</code></p>
+<p><img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/17.png" alt="image-20250226113446315"></p>
+<p>其实这里监听端也可以开在远程，但是考虑到了机器不出网的情况，所以本地这个目录稳妥一些</p>
+<p>下载下来查看</p>
+<p><img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/18.png" alt="image-20250226113606651"></p>
+<p><strong>在request_log中，可以获得受害者访问的url信息</strong></p>
+<p><img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/19.png" alt="image-20250226113859629"></p>
+<p><strong>在key_press中，可以得到受害者键盘输入信息</strong></p>
+<p><img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/20.png" alt="image-20250226114149925"></p>
+<p>这里就可以得到信息，</p>
+<p>​	受害者访问的路径是 <a target="_blank" rel="noopener" href="http://192.168.100.11:8080/zg/v2/index/ROOT/login.jsp%EF%BC%8C">http://192.168.100.11:8080/zg/v2/index/ROOT/login.jsp，</a></p>
+<p>​	还不是开在当前机器的，我用了一台Centos开的WEB</p>
+<p> <img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/22.png" alt="image-20250226114838966"></p>
+<p>​	受害者输入的账号密码是：<strong>admin&#x2F;Pzgjsaa1.</strong></p>
+<p>​	这个时候改一下type去验证与实际是否准确</p>
+<p><img src="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/img/21.png" alt="image-20250226114532894"></p>
+<p>完全准确，效果还可以</p>
+<h4 id="END"><a href="#END" class="headerlink" title="END"></a>END</h4><p>js能干的事情太多太多了，更多姿势有待开发！</p>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a></div><div class="post_share"><div class="social-share" data-image="/img/th.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="/pluginsSrc/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/" title="WIZ K8S LAN Party Writeup"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">WIZ K8S LAN Party Writeup</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/08/23/CobaltStrike-%E4%B8%80%E7%A7%8D%E7%89%B9%E6%AE%8A%E7%9A%84%E4%B8%8D%E5%87%BA%E7%BD%91%E4%B8%8A%E7%BA%BF%E6%96%B9%E5%BC%8F/" title="CobaltStrike-一种特殊的不出网上线方式"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-23</div><div class="title">CobaltStrike-一种特殊的不出网上线方式</div></div></a></div><div><a href="/2024/07/29/Springboot%E5%9C%BA%E6%99%AF%E4%B8%8B%E4%B8%8D%E5%87%BA%E7%BD%91-%E5%86%85%E5%AD%98%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86/" title="SpringBoot场景下不出网-内存中的正向代理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-29</div><div class="title">SpringBoot场景下不出网-内存中的正向代理</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/th.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Seven1an</div><div class="author-info__description">HIMURA KENSHIN</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">19</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Seven1an/"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">文章如出现错误或有疑问的地方，欢迎联系指出，在下感激不尽，也欢迎技术交流与合作的朋友。 <img src="/img/wechat.jpg" alt="微信二维码" style="width: 260px; height: auto;"></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.</span> <span class="toc-text">基于Chrome扩展插件的后门技术实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#START"><span class="toc-number">1.1.1.</span> <span class="toc-text">START</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%BC%94%E7%A4%BA"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">演示</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%8A%A0%E8%BD%BD%E6%8F%92%E4%BB%B6"><span class="toc-number">1.1.1.1.1.</span> <span class="toc-text">一、加载插件</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%90%AF%E5%8A%A8%E7%9B%91%E5%90%AC"><span class="toc-number">1.1.1.1.2.</span> <span class="toc-text">二、启动监听</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%BB%93%E6%9E%9C%E5%91%88%E7%8E%B0"><span class="toc-number">1.1.1.1.3.</span> <span class="toc-text">三、结果呈现</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#END"><span class="toc-number">1.1.2.</span> <span class="toc-text">END</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/" title="基于Chrome扩展插件的后门技术实现">基于Chrome扩展插件的后门技术实现</a><time datetime="2025-02-26T02:29:36.000Z" title="发表于 2025-02-26 10:29:36">2025-02-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/07/WIZ-K8S-LAN-Party-Writeup/" title="WIZ K8S LAN Party Writeup">WIZ K8S LAN Party Writeup</a><time datetime="2025-01-07T02:18:56.000Z" title="发表于 2025-01-07 10:18:56">2025-01-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/%E5%85%AC%E5%BC%8F%E5%8C%96Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-SpringBoot/" title="公式化Java代码审计-SpringBoot">公式化Java代码审计-SpringBoot</a><time datetime="2024-10-11T03:07:31.000Z" title="发表于 2024-10-11 11:07:31">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/08/23/CobaltStrike-%E4%B8%80%E7%A7%8D%E7%89%B9%E6%AE%8A%E7%9A%84%E4%B8%8D%E5%87%BA%E7%BD%91%E4%B8%8A%E7%BA%BF%E6%96%B9%E5%BC%8F/" title="CobaltStrike-一种特殊的不出网上线方式">CobaltStrike-一种特殊的不出网上线方式</a><time datetime="2024-08-23T02:30:58.000Z" title="发表于 2024-08-23 10:30:58">2024-08-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/07/29/Springboot%E5%9C%BA%E6%99%AF%E4%B8%8B%E4%B8%8D%E5%87%BA%E7%BD%91-%E5%86%85%E5%AD%98%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86/" title="SpringBoot场景下不出网-内存中的正向代理">SpringBoot场景下不出网-内存中的正向代理</a><time datetime="2024-07-29T11:32:21.000Z" title="发表于 2024-07-29 19:32:21">2024-07-29</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Seven1an</div><div class="framework-info"><span>❤ I love $BTC ❤</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="/pluginsSrc/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="true" data-click="false"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="/pluginsSrc/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><link rel="stylesheet" href="/pluginsSrc/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/aplayer/dist/APlayer.min.js"></script><script src="/pluginsSrc/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
