@@ -1,0 +1,336 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>分享自己之前的几个溯源记录 | Seven1an's blog</title><meta name="author" content="Seven1an"><meta name="copyright" content="Seven1an"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="免责声明：由于传播、利用本文所发布的而造成的任何直接或者间接的后果及损失，均由使用者本人承担 转发请先添加微信联系 Yexsec7 前言这些都是本人在去年年底做的 过程中并没有难度很高很复杂的操作 运气占第一，其次就是耐心了，思路只能排到最后 近期有空了整理出来 希望可以给从事这方面内容的小伙伴一些帮助 总共三个溯源场景：渗透、社工、应急 Start因为是溯源 涉及到漏洞利用的细节就不描述了 有些">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分享自己之前的几个溯源记录">
+<meta property="og:url" content="https://seven1an.github.io/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="Seven1an&#39;s blog">
+<meta property="og:description" content="免责声明：由于传播、利用本文所发布的而造成的任何直接或者间接的后果及损失，均由使用者本人承担 转发请先添加微信联系 Yexsec7 前言这些都是本人在去年年底做的 过程中并没有难度很高很复杂的操作 运气占第一，其次就是耐心了，思路只能排到最后 近期有空了整理出来 希望可以给从事这方面内容的小伙伴一些帮助 总共三个溯源场景：渗透、社工、应急 Start因为是溯源 涉及到漏洞利用的细节就不描述了 有些">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://seven1an.github.io/img/th.png">
+<meta property="article:published_time" content="2026-05-08T02:24:26.000Z">
+<meta property="article:modified_time" content="2026-05-09T04:35:42.485Z">
+<meta property="article:author" content="Seven1an">
+<meta property="article:tag" content="溯源">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://seven1an.github.io/img/th.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://seven1an.github.io/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: '/pluginsSrc/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: '/pluginsSrc/flickr-justified-gallery/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '分享自己之前的几个溯源记录',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-05-09 12:35:42'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/th.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Seven1an's blog"><span class="site-name">Seven1an's blog</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">分享自己之前的几个溯源记录</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2026-05-08T02:24:26.000Z" title="发表于 2026-05-08 10:24:26">2026-05-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%BA%AF%E6%BA%90/">溯源</a></span></div><div class="meta-secondline"></div></div></div><article class="post-content" id="article-container"><p>免责声明：由于传播、利用本文所发布的而造成的任何直接或者间接的后果及损失，均由使用者本人承担</p>
+<p>转发请先添加微信联系 <strong>Yexsec7</strong></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这些都是本人在去年年底做的</p>
+<p>过程中并没有难度很高很复杂的操作</p>
+<p>运气占第一，其次就是耐心了，思路只能排到最后</p>
+<p>近期有空了整理出来 希望可以给从事这方面内容的小伙伴一些帮助</p>
+<p>总共三个溯源场景：渗透、社工、应急</p>
+<h2 id="Start"><a href="#Start" class="headerlink" title="Start"></a>Start</h2><p><strong>因为是溯源 涉及到漏洞利用的细节就不描述了</strong></p>
+<p><strong>有些地方可能会遗漏马赛克，遵纪守法 禁止复现和骚扰当事人！</strong> 造成的后果与笔者无关！</p>
+<p>首先来看第一个例子</p>
+<h3 id="溯源—渗透："><a href="#溯源—渗透：" class="headerlink" title="溯源—渗透："></a>溯源—渗透：</h3><h4 id="发现"><a href="#发现" class="headerlink" title="发现"></a>发现</h4><h5 id="监测报备"><a href="#监测报备" class="headerlink" title="监测报备"></a>监测报备</h5><p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509103856176.png" alt="image-20260509104849916"></p>
+<p>可以确认攻击时间 2025年10月27日凌晨2点左右</p>
+<p><img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509104016946.png" alt="image-20260509104953637"></p>
+<p>大概看了一眼 ognl语法非常明显 确实不是误报</p>
+<p><img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509104036063.png" alt="image-20260509105050008"></p>
+<h4 id="处置"><a href="#处置" class="headerlink" title="处置"></a>处置</h4><p>看到idc服务器 一般按照我们渗透的思路去做就可以，热点就算了 除非背景特别硬  之前也是有遇到过联系运营商的 这里就不细说了</p>
+<h5 id="渗透测试"><a href="#渗透测试" class="headerlink" title="渗透测试"></a>渗透测试</h5><p>扫了下端口 感觉像是肉鸡</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509104442967.png" alt="image-20260509105207729"></p>
+<p>发现存在Docker api未授权</p>
+<p><img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509104211468.png" alt="image-20260509105508550"></p>
+<p>连接查看开放容器</p>
+<p><img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509122127276.png" alt="image-20260509122127276"></p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509104234336.png" alt="image-20260509104234336"></p>
+<h6 id="容器逃逸"><a href="#容器逃逸" class="headerlink" title="容器逃逸"></a>容器逃逸</h6><p>挂载宿主机根目录</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509105817374.png" alt="image-20260509122202017"></p>
+<p>确认操作系统</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509105833996.png" alt="image-20260509122241482"></p>
+<p>Centos 反弹shell不用考虑dash软连接问题  这个可以自行搜索 文章链接找不到了</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509105851530.png" alt="image-20260509105851530"></p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509110225093.png" alt="image-20260509110225093"></p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509110259224.png" alt="image-20260509110259224"></p>
+<p>确认机器不出网</p>
+<p>开始写ssh公钥，这里因为私钥文件被更改 也是写了很久，最后通过计划任务新建sh去修改文件权限解决</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509110319643.png" alt="image-20260509110319643"></p>
+<p>写入成功</p>
+<p><img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509110430230.png" alt="image-20260509122321851"> </p>
+<p>成功获取宿主机权限</p>
+<h4 id="取证"><a href="#取证" class="headerlink" title="取证"></a>取证</h4><h6 id="进程分析"><a href="#进程分析" class="headerlink" title="进程分析"></a>进程分析</h6><p>发现黑客留的后门，这一步用的什么命令怎么搜 真的是废了九牛二虎之力，</p>
+<p>这里呈现的是一张图结果，过程却用了两三天</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509110516437.png" alt="image-20260509110516437"></p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509110524407.png" alt="image-20260509110524407"></p>
+<p>base64解码</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509110541554.png" alt="image-20260509110541554"></p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509110552187.png" alt="image-20260509110552187"></p>
+<p>境外甲骨文公司的vps 点到为止</p>
+<h4 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h4><p><strong>确认为攻击者为肉鸡，被韩国ip远控对客户发起漏洞利用</strong></p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509110650486.png" alt="image-20260509110650486"></p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509110700861.png" alt="image-20260509110700861"></p>
+<p>这个的话 溯源并不复杂</p>
+<p>主要是两个难点 一是逃逸过程中Centos 反弹shell dash的问题，二是取证闭环</p>
+<p>至于从韩国vps继续深入 已经没有必要了，证据链充足 可以提交报告了嘻嘻</p>
+<p>接下来看第二个</p>
+<h3 id="溯源—社工："><a href="#溯源—社工：" class="headerlink" title="溯源—社工："></a>溯源—社工：</h3><p>案例一设备来自态势感知，这个则来自于溯源最重要的设备：<strong>默安蜜罐</strong>！</p>
+<p>依旧老手法，大家可以去看我去年的这篇文章：<a href="https://seven1an.github.io/2025/07/20/%E8%AE%B0%E5%BD%95%E8%BF%91%E6%9C%9F%E5%9B%BD%E6%8A%A4%E7%9A%84%E4%B8%80%E6%AC%A1%E6%88%90%E5%8A%9F%E6%BA%AF%E6%BA%90/">记录近期国护的一次成功溯源 | Seven1an’s blog</a> 思路是一样的</p>
+<h4 id="发现-1"><a href="#发现-1" class="headerlink" title="发现"></a>发现</h4><h5 id="蜜罐捕获"><a href="#蜜罐捕获" class="headerlink" title="蜜罐捕获"></a>蜜罐捕获</h5><p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509111548062.png" alt="image-20260509111548062"></p>
+<p>梳理蜜罐得到的信息</p>
+<p>百度ID </p>
+<ul>
+<li>​	gongxxxxx</li>
+</ul>
+<p>JD_ID </p>
+<ul>
+<li>​	jd_432xx0xxxxx</li>
+</ul>
+<p>我总结的经验 只要蜜罐能捕获到两条信息  大够特够</p>
+<h4 id="处置-1"><a href="#处置-1" class="headerlink" title="处置"></a>处置</h4><h5 id="社工推理"><a href="#社工推理" class="headerlink" title="社工推理"></a>社工推理</h5><p>访问京东养车业务</p>
+<p><a target="_blank" rel="noopener" href="https://car.m.jd.com/h5/newIndex.html">https://car.m.jd.com/h5/newIndex.html</a></p>
+<p>触发忘记密码</p>
+<p><a target="_blank" rel="noopener" href="https://plogin.m.jd.com/findpwd/index?appid=829&returnurl=https://car.m.jd.com/h5/newIndex.html">https://plogin.m.jd.com/findpwd/index?appid=829&amp;returnurl=https%3A%2F%2Fcar.m.jd.com%2Fh5%2FnewIndex.html</a></p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509111813929.png" alt="image-20260509111813929"></p>
+<p>填充jdid</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509111831719.png" alt="image-20260509111831719"></p>
+<p>在此处得到手机号前3位和后4位 185 xxxx 0529</p>
+<p>下一步选择，选择校验银行卡验证</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509111926566.png" alt="image-20260509111926566"></p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509112016735.png" alt="image-20260509112016735"></p>
+<p>这里得到身份证开头为2 末尾是6 名字是 xx鸣</p>
+<p>由蜜罐捕获信息得知攻击者IP地址为 北京</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509112045009.png" alt="image-20260509112045009"></p>
+<p>碰撞手机号归属地</p>
+<p>中国大陆身份证号，东三省为2开头，外加攻击者IP为北京 已知185 xxxx 0259 基于对社会工程学判断 碰撞9999位 并筛选出 辽宁+黑龙江+吉林+北京的归属</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509112123878.png" alt="image-20260509112123878"></p>
+<p>合计1w条，筛选出结果后为 2025条</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509112143216.png" alt="image-20260509112143216"></p>
+<p>回到京东业务 匹配碰撞 到 185xxxx0259</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509112216096.png" alt="image-20260509112216096"></p>
+<p>与蜜罐捕获的jd id一致</p>
+<h5 id="得到手机号"><a href="#得到手机号" class="headerlink" title="得到手机号"></a>得到手机号</h5><p>判断出攻击者手机号为 185xxxx0259</p>
+<h5 id="其他信息挖掘"><a href="#其他信息挖掘" class="headerlink" title="其他信息挖掘"></a>其他信息挖掘</h5><p><strong>支付宝姓名</strong></p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509112314976.png" alt="image-20260509112314976"></p>
+<p><strong>云闪付真名</strong></p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509112342704.png" alt="image-20260509112342704"></p>
+<p>xx鸣</p>
+<p>姓名xx鸣，对应百度ID ：gonxxxx </p>
+<p><strong>微博</strong></p>
+<p>从名字不难看出也是做安全的</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509112442440.png" alt="image-20260509112442440"></p>
+<p><strong>脉脉</strong></p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509112522567.png" alt="image-20260509112522567"></p>
+<p>好厉害呀</p>
+<p><strong>社工库查询</strong></p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509112728832.png" alt="image-20260509112728832"></p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509112756155.png" alt="image-20260509112756155"></p>
+<p>身份证号码为2xxxxxx6816，对应京东业务返回的身份证末尾 6 由此确认身份证号 </p>
+<p><strong>快递地址定位</strong></p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509112838043.png" alt="image-20260509112838043"></p>
+<p>搜索引擎信息</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509112910178.png" alt="image-20260509112910178"></p>
+<p><strong>qq音乐</strong></p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509112932018.png" alt="image-20260509112932018"></p>
+<h4 id="结果-1"><a href="#结果-1" class="headerlink" title="结果"></a>结果</h4><p>拿到手机号 身份证 工作单位 邮箱账号密码等等 </p>
+<p>东西太多了，可以去翻很多社交平台 溯源闭环点到为止</p>
+<p>上面两个，都是关于外对内攻击的溯源</p>
+<p>如果说内对内有告警或者攻击，找不到人，从溯源的角度我们要怎么做呢？来看第三个</p>
+<h3 id="溯源—应急："><a href="#溯源—应急：" class="headerlink" title="溯源—应急："></a>溯源—应急：</h3><h4 id="发现-2"><a href="#发现-2" class="headerlink" title="发现"></a>发现</h4><p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509114414636.png" alt="image-20260509114414636"></p>
+<h4 id="处置-2"><a href="#处置-2" class="headerlink" title="处置"></a>处置</h4><h5 id="流量分析"><a href="#流量分析" class="headerlink" title="流量分析"></a>流量分析</h5><p>内对内的攻击，首先需要研判是否为误报</p>
+<p>但是当时流量缺失以及设备部署问题，无法判断</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509114516911.png" alt="image-20260509114516911"></p>
+<p>往上级设备翻找来源的原始流量包</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509114531968.png" alt="image-20260509114531968"></p>
+<p> 原始通信流量包加密，无法判断，其实到这里 基本可以判断出来是怎么回事了，肯定个有体系化的工具，比如常见应用啊 或者说设备的agent才会怎么做 再或者就是真实黑客工具了</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509114655200.png" alt="image-20260509114655200"></p>
+<p>信息太少了 唯一有用的就是一个端口和ip</p>
+<p>ip测试之后发现没吊用 连到境外去了，当时猜测 难不成是境外大手子</p>
+<p>唯一有用的就是 9993这个端口了 以及ZeroTier这个关键字</p>
+<p>了解了一下 大概是一个隧道代理工具</p>
+<p>根据暴露信息 搜集互联网资产测试</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509115030132.png" alt="image-20260509115030132"></p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509115036131.png" alt="image-20260509115036131"></p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509115041545.png" alt="image-20260509115041545"></p>
+<p>根据通信端口9993，以及互联网测其他站点连接回显</p>
+<p><strong>判断出不是误报</strong>，确认为ZeroTier内网穿透软件在通信</p>
+<h5 id="应急处置"><a href="#应急处置" class="headerlink" title="应急处置"></a>应急处置</h5><p>首先在设备上给他隔离掉，但是当时设备 准入系统 集群管理 终端设备都找遍了，协调各个部门去查，居然没有这个ip！</p>
+<p><img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509115305967.png" alt="image-20260509115305967"></p>
+<p>无法确认归属以及所有人</p>
+<h5 id="确认身份"><a href="#确认身份" class="headerlink" title="确认身份"></a>确认身份</h5><p>无法确认归属后，决定从拿这台机器权限下手，这样从系统测直接可以确认身份</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509115346161.png" alt="image-20260509115346161"></p>
+<p>从端口初步判断出为服务器，因为开放了大量服务，不属于个人pc</p>
+<p>根据开放服务测试已公开漏洞 均不存在 直接getshell的漏洞(kkFileView)</p>
+<p>找到切入点 </p>
+<p>访问url：<a target="_blank" rel="noopener" href="http://10.212.137.10:8848/">http://10.212.137.10:8848/</a></p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509115417208.png" alt="image-20260509115417208"></p>
+<p>目录扫描发现nacos服务</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509115428582.png" alt="image-20260509115428582"></p>
+<p>开发场景无密码直接登录后台</p>
+<p>从这里推测信息，“数管系统”、“数管系统产品”、“数字管理”</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509115445599.png" alt="image-20260509115445599"></p>
+<p>在配置面板找配置文件</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509115455438.png" alt="image-20260509115455438"></p>
+<p>编辑这个文件</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509115507624.png" alt="image-20260509115507624"></p>
+<p>最终在这里得到了 postgresql数据库的账号密码</p>
+<p>前面扫描到他开放了此数据库，可以直接连接</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509115532433.png" alt="image-20260509115532433"></p>
+<p>成功拿到机器权限</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509115546176.png" alt="image-20260509115546176"></p>
+<p>权限很低懒得继续弄 翻一翻文件即可</p>
+<p>最终在D盘下 找到个人信息的劳动合同</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509115633071.png" alt="image-20260509115633071"></p>
+<p>确认名字后，电话联系到了本人，开始上机排查</p>
+<h4 id="结果-2"><a href="#结果-2" class="headerlink" title="结果"></a>结果</h4><p>​	这个人是个开发，所以机器上开了很多环境 也给我们提供了攻击面</p>
+<p>​	隧道通信后面确认是他们合作商公司自研的vpn，组件使用的是境外的产品 会有心跳探测到美国中心的服务器，这也就解释了为什么</p>
+<p>会有对外连接的情况</p>
+<p>   <strong>这个事情也反应了 对合作商公司接入内网的管理不当，如果资产定位不到人 应急都没有切入点，这次是运气好扫到了有用的点，但正常这种机会屈指可数，后面也都上了统一管理的设备</strong></p>
+<p>这三篇还是比较简单易懂的 没有涉及到安全研究类，只是覆盖了我们值守的日常工作</p>
+<p>还剩两篇比较复杂，后面有空再写</p>
+<p>​	第一篇是存储u盘丢了 少了一些重要的图 我在想要不要本地搭环境补图</p>
+<p>​	第二篇则是<strong>取证太过复杂</strong>  依旧是肉鸡 但是涉及到了非常多的国家和地区，各种黑客工具，有很多无法确认的地方 怕写出来误导读者 有空了重新再看看 </p>
+<p>​	第二篇大纲图如下：</p>
+<p> <img src="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/img/image-20260509121459871.png" alt="image-20260509121459871"></p>
+<p>谢谢阅读  有错误或者对您造成了影响 请联系我 <strong>wx：Yexsec7</strong></p>
+<h2 id="End"><a href="#End" class="headerlink" title="End"></a><strong>End</strong></h2></article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%BA%AF%E6%BA%90/">溯源</a></div><div class="post_share"><div class="social-share" data-image="/img/th.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="/pluginsSrc/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/12/16/%E8%AE%B0%E5%BD%95%E4%BB%8E%E6%94%BB%E5%87%BB%E6%BA%AF%E6%BA%90%E5%88%B0docker%E9%80%83%E9%80%B8%E7%9A%84%E5%AD%A6%E4%B9%A0/" title="记录从攻击溯源到docker逃逸的学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">记录从攻击溯源到docker逃逸的学习</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/12/16/%E8%AE%B0%E5%BD%95%E4%BB%8E%E6%94%BB%E5%87%BB%E6%BA%AF%E6%BA%90%E5%88%B0docker%E9%80%83%E9%80%B8%E7%9A%84%E5%AD%A6%E4%B9%A0/" title="记录从攻击溯源到docker逃逸的学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-16</div><div class="title">记录从攻击溯源到docker逃逸的学习</div></div></a></div><div><a href="/2025/07/20/%E8%AE%B0%E5%BD%95%E8%BF%91%E6%9C%9F%E5%9B%BD%E6%8A%A4%E7%9A%84%E4%B8%80%E6%AC%A1%E6%88%90%E5%8A%9F%E6%BA%AF%E6%BA%90/" title="记录近期国护的一次成功溯源"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-20</div><div class="title">记录近期国护的一次成功溯源</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/th.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Seven1an</div><div class="author-info__description">HIMURA KENSHIN</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Seven1an/"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">文章如出现错误或有疑问的地方，欢迎联系指出，我感激不尽，也欢迎技术交流与合作的朋友。 <img src="/img/wechat.jpg" alt="微信二维码" style="width: 260px; height: auto;"></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Start"><span class="toc-number">1.1.</span> <span class="toc-text">Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BA%AF%E6%BA%90%E2%80%94%E6%B8%97%E9%80%8F%EF%BC%9A"><span class="toc-number">1.1.1.</span> <span class="toc-text">溯源—渗透：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%91%E7%8E%B0"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">发现</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%9B%91%E6%B5%8B%E6%8A%A5%E5%A4%87"><span class="toc-number">1.1.1.1.1.</span> <span class="toc-text">监测报备</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%84%E7%BD%AE"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">处置</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95"><span class="toc-number">1.1.1.2.1.</span> <span class="toc-text">渗透测试</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8%E9%80%83%E9%80%B8"><span class="toc-number">1.1.1.2.1.1.</span> <span class="toc-text">容器逃逸</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%96%E8%AF%81"><span class="toc-number">1.1.1.3.</span> <span class="toc-text">取证</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E5%88%86%E6%9E%90"><span class="toc-number">1.1.1.3.0.1.</span> <span class="toc-text">进程分析</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C"><span class="toc-number">1.1.1.4.</span> <span class="toc-text">结果</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BA%AF%E6%BA%90%E2%80%94%E7%A4%BE%E5%B7%A5%EF%BC%9A"><span class="toc-number">1.1.2.</span> <span class="toc-text">溯源—社工：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%91%E7%8E%B0-1"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">发现</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%9C%9C%E7%BD%90%E6%8D%95%E8%8E%B7"><span class="toc-number">1.1.2.1.1.</span> <span class="toc-text">蜜罐捕获</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%84%E7%BD%AE-1"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">处置</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A4%BE%E5%B7%A5%E6%8E%A8%E7%90%86"><span class="toc-number">1.1.2.2.1.</span> <span class="toc-text">社工推理</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%BE%97%E5%88%B0%E6%89%8B%E6%9C%BA%E5%8F%B7"><span class="toc-number">1.1.2.2.2.</span> <span class="toc-text">得到手机号</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E4%BF%A1%E6%81%AF%E6%8C%96%E6%8E%98"><span class="toc-number">1.1.2.2.3.</span> <span class="toc-text">其他信息挖掘</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C-1"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">结果</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BA%AF%E6%BA%90%E2%80%94%E5%BA%94%E6%80%A5%EF%BC%9A"><span class="toc-number">1.1.3.</span> <span class="toc-text">溯源—应急：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%91%E7%8E%B0-2"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">发现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%84%E7%BD%AE-2"><span class="toc-number">1.1.3.2.</span> <span class="toc-text">处置</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90"><span class="toc-number">1.1.3.2.1.</span> <span class="toc-text">流量分析</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%BA%94%E6%80%A5%E5%A4%84%E7%BD%AE"><span class="toc-number">1.1.3.2.2.</span> <span class="toc-text">应急处置</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A1%AE%E8%AE%A4%E8%BA%AB%E4%BB%BD"><span class="toc-number">1.1.3.2.3.</span> <span class="toc-text">确认身份</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C-2"><span class="toc-number">1.1.3.3.</span> <span class="toc-text">结果</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#End"><span class="toc-number">1.2.</span> <span class="toc-text">End</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/08/%E5%88%86%E4%BA%AB%E8%87%AA%E5%B7%B1%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%A0%E4%B8%AA%E6%BA%AF%E6%BA%90%E8%AE%B0%E5%BD%95/" title="分享自己之前的几个溯源记录">分享自己之前的几个溯源记录</a><time datetime="2026-05-08T02:24:26.000Z" title="发表于 2026-05-08 10:24:26">2026-05-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/16/%E8%AE%B0%E5%BD%95%E4%BB%8E%E6%94%BB%E5%87%BB%E6%BA%AF%E6%BA%90%E5%88%B0docker%E9%80%83%E9%80%B8%E7%9A%84%E5%AD%A6%E4%B9%A0/" title="记录从攻击溯源到docker逃逸的学习">记录从攻击溯源到docker逃逸的学习</a><time datetime="2025-12-16T08:19:18.000Z" title="发表于 2025-12-16 16:19:18">2025-12-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/20/%E8%AE%B0%E5%BD%95%E8%BF%91%E6%9C%9F%E5%9B%BD%E6%8A%A4%E7%9A%84%E4%B8%80%E6%AC%A1%E6%88%90%E5%8A%9F%E6%BA%AF%E6%BA%90/" title="记录近期国护的一次成功溯源">记录近期国护的一次成功溯源</a><time datetime="2025-07-20T02:27:44.000Z" title="发表于 2025-07-20 10:27:44">2025-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/10/Redteam-%E4%BB%8EGetshell%E5%88%B0%E6%9D%9F%E6%89%8B%E6%97%A0%E7%AD%96/" title="Redteam-从Getshell到束手无策">Redteam-从Getshell到束手无策</a><time datetime="2025-06-10T03:34:43.000Z" title="发表于 2025-06-10 11:34:43">2025-06-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/26/%E5%9F%BA%E4%BA%8EChrome%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E7%9A%84%E5%90%8E%E9%97%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/" title="基于Chrome扩展插件的后门技术实现">基于Chrome扩展插件的后门技术实现</a><time datetime="2025-02-26T02:29:36.000Z" title="发表于 2025-02-26 10:29:36">2025-02-26</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By Seven1an</div><div class="framework-info"><span>❤ I love $BTC ❤</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="/pluginsSrc/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="true" data-click="false"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="/pluginsSrc/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><link rel="stylesheet" href="/pluginsSrc/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/aplayer/dist/APlayer.min.js"></script><script src="/pluginsSrc/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
